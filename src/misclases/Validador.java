@@ -58,4 +58,13 @@ public class Validador {
         }
         return true;
     }
+    public static boolean validarN_bastidor(String n,Component comp){
+        Pattern pat = Pattern.compile("[a-zA-Z0-9]{20}");
+        Matcher mat = pat.matcher(n);
+        if(!mat.find()){
+            JOptionPane.showMessageDialog(comp, "El texto no es un n-bastidor");
+            return false;
+        }
+        return true;
+    }
 }

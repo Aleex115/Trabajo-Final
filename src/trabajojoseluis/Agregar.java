@@ -35,7 +35,12 @@ public class Agregar extends javax.swing.JFrame {
             Agregar.this.remove(txtSueldo);
             Agregar.this.remove(sueldo);
         }
-        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE); 
+        if (!usuario.equals("vendedores")) {
+            Agregar.this.remove(contraseña);
+            Agregar.this.remove(txtpasswd);
+
+        }
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
     }
 
     /**
@@ -50,7 +55,7 @@ public class Agregar extends javax.swing.JFrame {
         jLabel1 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        contraseña = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
         sueldo = new javax.swing.JLabel();
         txtnombre = new javax.swing.JTextField();
@@ -79,9 +84,9 @@ public class Agregar extends javax.swing.JFrame {
         jLabel3.setText("Numero");
         getContentPane().add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(40, 260, -1, -1));
 
-        jLabel4.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
-        jLabel4.setText("Contraseña");
-        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 380, -1, -1));
+        contraseña.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
+        contraseña.setText("Contraseña");
+        getContentPane().add(contraseña, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 380, -1, -1));
 
         jLabel5.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
         jLabel5.setText("Email");
@@ -194,7 +199,7 @@ public class Agregar extends javax.swing.JFrame {
                         try {
                             Connection conexion = Conex.devolverConex();
 
-                            String sql = "insert into " + usuario + " values (?,?,?,?,?);";
+                            String sql = "insert into " + usuario + " values (?,?,?,?);";
 
                             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
 
@@ -202,7 +207,6 @@ public class Agregar extends javax.swing.JFrame {
                             sentecia.setString(2, txtnombre.getText());
                             sentecia.setInt(3, Integer.parseInt(txtnum.getText()));
                             sentecia.setString(4, txtemail.getText());
-                            sentecia.setString(5, encryptPassword(txtpasswd.getText()));
 
                             System.out.println(sentecia);
 
@@ -216,12 +220,12 @@ public class Agregar extends javax.swing.JFrame {
                             JOptionPane.showMessageDialog(Agregar.this, e);
                         }
 
-                    } else {
+                    } else if (usuario.equals("vendedores")) {
                         if (Validador.validarSueldo(Integer.parseInt(txtSueldo.getText()), this)) {
                             try {
                                 Connection conexion = Conex.devolverConex();
 
-                                String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ? , ? );";
+                                String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ? , ?,0 );";
 
                                 PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
 
@@ -240,6 +244,33 @@ public class Agregar extends javax.swing.JFrame {
 
                             } catch (Exception e) {
                                 JOptionPane.showMessageDialog(Agregar.this, e);
+                            }
+                        }
+                    } else {
+                        {
+                            if (Validador.validarSueldo(Integer.parseInt(txtSueldo.getText()), this)) {
+                                try {
+                                    Connection conexion = Conex.devolverConex();
+
+                                    String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ?  );";
+
+                                    PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
+
+                                    sentecia.setString(1, txtdni.getText());
+                                    sentecia.setString(2, txtnombre.getText());
+                                    sentecia.setInt(3, Integer.parseInt(txtnum.getText()));
+                                    sentecia.setString(4, txtemail.getText());
+                                    sentecia.setInt(5, Integer.parseInt(txtSueldo.getText()));
+
+                                    sentecia.executeUpdate();
+                                    sentecia.close();
+                                    Conex.CerrarConex();
+                                    JOptionPane.showMessageDialog(Agregar.this, "Agregado correctamente");
+                                    dispose();
+
+                                } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(Agregar.this, e);
+                                }
                             }
                         }
                     }
@@ -324,10 +355,10 @@ public class Agregar extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;
+    private javax.swing.JLabel contraseña;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JPanel jPanel3;

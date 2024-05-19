@@ -59,12 +59,20 @@ public class Usuarios extends javax.swing.JFrame {
     /**
      * Creates new form Usuarios
      */
-    public Usuarios() {
+    String email;
+
+    public Usuarios(String emailS) {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Gestion de usuarios");
         this.setSize(960, 600);
+        email = emailS;
+        if (!email.equals("admin@gmail.com")) {
+            Usuarios.this.remove(btnEliminar);
+            Usuarios.this.remove(btnModificar);
+
+        }
     }
 
     /**
@@ -144,7 +152,7 @@ public class Usuarios extends javax.swing.JFrame {
         jLabel5.setFont(new java.awt.Font("Gill Sans MT", 0, 16)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(200, 200, 200));
         jLabel5.setText("DNI:");
-        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 240, -1, -1));
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(252, 240, 40, -1));
 
         txtDNI.setFont(new java.awt.Font("Gill Sans MT", 0, 16)); // NOI18N
         txtDNI.setForeground(new java.awt.Color(20, 20, 20));
@@ -461,7 +469,7 @@ public class Usuarios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Usuarios().setVisible(true);
+                new Usuarios("").setVisible(true);
             }
         });
     }

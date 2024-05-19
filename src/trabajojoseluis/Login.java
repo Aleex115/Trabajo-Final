@@ -37,7 +37,7 @@ public class Login extends javax.swing.JFrame {
                     if (authenticatePassword(passwd, contraseña)) {
                         JOptionPane.showMessageDialog(Login.this, "Login correcto");
                         dispose();
-                        Menu menu = new Menu();
+                        Menu menu = new Menu(email);
                         menu.setVisible(true);
                     } else {
                         JOptionPane.showMessageDialog(Login.this, "Contraseña incorrecta");

@@ -13,12 +13,14 @@ public class Menu extends javax.swing.JFrame {
     /**
      * Creates new form Menu
      */
-    public Menu() {
+    String email;
+    public Menu(String emailS) {
         initComponents();
         this.setResizable(false);
         this.setLocationRelativeTo(null);
         this.setTitle("Menu principal");
         this.setSize(960, 540);
+        email = emailS;
     }
 
     /**
@@ -85,6 +87,11 @@ public class Menu extends javax.swing.JFrame {
         coches.setBorderPainted(false);
         coches.setContentAreaFilled(false);
         coches.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        coches.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                cochesActionPerformed(evt);
+            }
+        });
         getContentPane().add(coches, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 140, -1, -1));
 
         reparaciones.setBackground(new java.awt.Color(0, 0, 0));
@@ -118,44 +125,20 @@ public class Menu extends javax.swing.JFrame {
 
     private void usuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuariosActionPerformed
         dispose();
-        Usuarios usuarios = new Usuarios();
+        Usuarios usuarios = new Usuarios(email);
         usuarios.setVisible(true);
     }//GEN-LAST:event_usuariosActionPerformed
+
+    private void cochesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cochesActionPerformed
+        dispose();
+        Coches coches = new Coches(email);
+        coches.setVisible(true);
+    }//GEN-LAST:event_cochesActionPerformed
 
     /**
      * @param args the command line arguments
      */
-    public static void main(String args[]) {
-        /* Set the Nimbus look and feel */
-        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
-        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
-         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
-         */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
-                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
-                    break;
-                }
-            }
-        } catch (ClassNotFoundException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
-            java.util.logging.Logger.getLogger(Menu.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        }
-        //</editor-fold>
-
-        /* Create and display the form */
-        java.awt.EventQueue.invokeLater(new Runnable() {
-            public void run() {
-                new Menu().setVisible(true);
-            }
-        });
-    }
+  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton coches;
