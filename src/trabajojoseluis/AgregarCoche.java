@@ -81,7 +81,7 @@ public class AgregarCoche extends javax.swing.JFrame {
         dni_proveedor = new javax.swing.JComboBox<>();
         imagen = new javax.swing.JButton();
         jCalendar1 = new com.toedter.calendar.JCalendar();
-        jButton1 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
         txtImagen = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -193,15 +193,15 @@ public class AgregarCoche extends javax.swing.JFrame {
         getContentPane().add(imagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 420, -1, -1));
         getContentPane().add(jCalendar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 230, 370, 220));
 
-        jButton1.setFont(new java.awt.Font("Gill Sans MT", 0, 24)); // NOI18N
-        jButton1.setForeground(new java.awt.Color(255, 51, 51));
-        jButton1.setText("Agregar coche");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 24)); // NOI18N
+        btnAgregar.setForeground(new java.awt.Color(255, 51, 51));
+        btnAgregar.setText("Agregar coche");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 480, 190, 50));
+        getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 480, 190, 50));
 
         txtImagen.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
         txtImagen.setForeground(new java.awt.Color(187, 187, 188));
@@ -225,7 +225,7 @@ public class AgregarCoche extends javax.swing.JFrame {
 
     }//GEN-LAST:event_imagenActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         if (Comprobaciones()) {
             try {
                 Connection conexion = Conex.devolverConex();
@@ -240,7 +240,7 @@ public class AgregarCoche extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, e);
             }
         }
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     public void AgregarPro(){
         
@@ -342,12 +342,12 @@ public class AgregarCoche extends javax.swing.JFrame {
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JComboBox<String> categoria;
     private javax.swing.JTextField cv;
     private javax.swing.JComboBox<String> dni_proveedor;
     private javax.swing.JComboBox<String> estado;
     private javax.swing.JButton imagen;
-    private javax.swing.JButton jButton1;
     private com.toedter.calendar.JCalendar jCalendar1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;

@@ -11,6 +11,7 @@ import javax.swing.ComboBoxModel;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
+import javax.swing.JFrame;
 import javax.swing.table.DefaultTableModel;
 import misclases.Conex;
 
@@ -25,15 +26,10 @@ public class Coches extends javax.swing.JFrame {
     /**
      * Creates new form Coches
      */
-    String email,modeloC,n_bastidorC;
+    String email, modeloC, n_bastidorC;
     long precioC;
 
-    public Coches(String emailS) {
-        initComponents();
-        this.setResizable(false);
-        this.setLocationRelativeTo(null);
-        this.setTitle("Gestion de coches");
-        this.setSize(1000, 740);
+    public void Iniciar() {
         precio.setVisible(false);
         preciotxt.setVisible(false);
         btnComprar.setVisible(false);
@@ -44,7 +40,16 @@ public class Coches extends javax.swing.JFrame {
         km.setVisible(false);
         cv.setVisible(false);
         jLabel1.setVisible(false);
+    }
 
+    public Coches(String emailS) {
+        initComponents();
+        this.setResizable(false);
+        this.setLocationRelativeTo(null);
+        this.setTitle("Gestion de coches");
+        this.setSize(1000, 740);
+        Iniciar();
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         modelCoches.setModel(model1);
         rbDisp.setSelected(true);
         email = emailS;
@@ -356,7 +361,7 @@ public class Coches extends javax.swing.JFrame {
     }//GEN-LAST:event_btnComprar1ActionPerformed
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
-        ComprarCoche cc = new ComprarCoche(email, modeloC, n_bastidorC,precioC);
+        ComprarCoche cc = new ComprarCoche(email, modeloC, n_bastidorC, precioC);
         cc.setVisible(true);
     }//GEN-LAST:event_btnComprarActionPerformed
 

@@ -101,6 +101,11 @@ public class Menu extends javax.swing.JFrame {
         reparaciones.setBorderPainted(false);
         reparaciones.setContentAreaFilled(false);
         reparaciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        reparaciones.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reparacionesActionPerformed(evt);
+            }
+        });
         getContentPane().add(reparaciones, new org.netbeans.lib.awtextra.AbsoluteConstraints(630, 290, -1, -1));
 
         usuarios.setBackground(new java.awt.Color(0, 0, 0));
@@ -124,16 +129,19 @@ public class Menu extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void usuariosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_usuariosActionPerformed
-        dispose();
         Usuarios usuarios = new Usuarios(email);
         usuarios.setVisible(true);
     }//GEN-LAST:event_usuariosActionPerformed
 
     private void cochesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cochesActionPerformed
-        dispose();
         Coches coches = new Coches(email);
         coches.setVisible(true);
     }//GEN-LAST:event_cochesActionPerformed
+
+    private void reparacionesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reparacionesActionPerformed
+        Reparaciones r = new Reparaciones();
+        r.setVisible(true);
+    }//GEN-LAST:event_reparacionesActionPerformed
 
     /**
      * @param args the command line arguments

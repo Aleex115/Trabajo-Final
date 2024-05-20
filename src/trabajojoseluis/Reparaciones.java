@@ -4,11 +4,30 @@
  */
 package trabajojoseluis;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
+import misclases.Conex;
+
 /**
  *
  * @author code
  */
 public class Reparaciones extends javax.swing.JFrame {
+
+    DefaultTableModel dtm = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            // Hacer que todas las celdas no sean editables
+            return false;
+        }
+    };
 
     /**
      * Creates new form Reparaciones
@@ -18,6 +37,11 @@ public class Reparaciones extends javax.swing.JFrame {
         this.setLocationRelativeTo(null);
         this.setTitle("Reparaciones");
         this.setSize(960, 600);
+        tabla.setModel(dtm);
+        String[] titulos = new String[]{"Descripción", "Mecanico", "Modelo", "Duración"};
+        dtm.setColumnIdentifiers(titulos);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
     }
 
     /**
@@ -30,13 +54,119 @@ public class Reparaciones extends javax.swing.JFrame {
     private void initComponents() {
 
         jScrollPane1 = new javax.swing.JScrollPane();
+        tabla = new javax.swing.JTable();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        txtMecanico = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtCoche = new javax.swing.JTextField();
+        btnAgregar = new javax.swing.JButton();
+        btnConsultar = new javax.swing.JButton();
+        jLabel2 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 150, 750, 230));
+
+        tabla.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {},
+                {},
+                {},
+                {}
+            },
+            new String [] {
+
+            }
+        ));
+        jScrollPane1.setViewportView(tabla);
+
+        getContentPane().add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 960, 340));
+
+        jLabel1.setFont(new java.awt.Font("Gill Sans MT", 3, 48)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(0, 51, 255));
+        jLabel1.setText("Consultar usuarios");
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 0, -1, -1));
+
+        jLabel4.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        jLabel4.setForeground(new java.awt.Color(20, 20, 20));
+        jLabel4.setText("Mecanico: ");
+        getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, -1, -1));
+
+        txtMecanico.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        txtMecanico.setForeground(new java.awt.Color(20, 20, 20));
+        getContentPane().add(txtMecanico, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 210, 100, -1));
+
+        jLabel5.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        jLabel5.setForeground(new java.awt.Color(20, 20, 20));
+        jLabel5.setText("Coche:");
+        getContentPane().add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(380, 210, 70, -1));
+
+        txtCoche.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        txtCoche.setForeground(new java.awt.Color(20, 20, 20));
+        txtCoche.setText(" ");
+        getContentPane().add(txtCoche, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 210, 100, -1));
+
+        btnAgregar.setBackground(new java.awt.Color(51, 51, 255));
+        btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        btnAgregar.setText("Agregar");
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(770, 200, -1, -1));
+
+        btnConsultar.setBackground(new java.awt.Color(255, 255, 0));
+        btnConsultar.setFont(new java.awt.Font("Gill Sans MT", 0, 20)); // NOI18N
+        btnConsultar.setText("Consultar");
+        btnConsultar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnConsultarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnConsultar, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 200, -1, -1));
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/UIX/taller.jpg"))); // NOI18N
+        getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -190, 960, 600));
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void btnConsultarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConsultarActionPerformed
+        dtm.setRowCount(0);
+
+        try {
+            Connection conexion = Conex.devolverConex();
+            String sql = "SELECT reparaciones.descp, mecanicos.nombre, CONCAT(coches.marca, ' ', coches.modelo), DATEDIFF(reparaciones.fecha_final, reparaciones.fecha_inicio) "
+                    + "FROM reparaciones "
+                    + "JOIN coches ON coches.n_bastidor = reparaciones.n_bastidor "
+                    + "JOIN mecanicos ON mecanicos.dni = reparaciones.dni_mecanico "
+                    + "WHERE mecanicos.nombre LIKE ? AND CONCAT(coches.marca, ' ', coches.modelo) LIKE ?;";
+
+            PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+            sentencia.setString(1, txtMecanico.getText().trim() + "%");
+            sentencia.setString(2, "%" + txtCoche.getText().trim() + "%");
+            ResultSet rs = sentencia.executeQuery();
+
+            while (rs.next()) {
+                Object[] rowData = {rs.getString(1), rs.getString(2), rs.getString(3), rs.getInt(4)};
+                dtm.addRow(rowData);
+            }
+
+            rs.close();
+            sentencia.close();
+            Conex.CerrarConex();
+
+        } catch (SQLException e) {
+            JOptionPane.showMessageDialog(this, e);
+        }
+
+    }//GEN-LAST:event_btnConsultarActionPerformed
+
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
+        AgregarReparacion ar = new AgregarReparacion();
+        ar.setVisible(true);
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -74,6 +204,15 @@ public class Reparaciones extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
+    private javax.swing.JButton btnConsultar;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JTable tabla;
+    private javax.swing.JTextField txtCoche;
+    private javax.swing.JTextField txtMecanico;
     // End of variables declaration//GEN-END:variables
 }

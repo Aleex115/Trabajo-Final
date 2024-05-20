@@ -9,6 +9,7 @@ import com.mysql.jdbc.PreparedStatement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
@@ -32,11 +33,11 @@ public class Usuarios extends javax.swing.JFrame {
             Connection conexion = Conex.devolverConex();
             String sql = "SELECT * FROM " + campo + " WHERE nombre LIKE ? AND dni LIKE ?";
 
-            PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
-            sentecia.setString(1, nombre.trim() + "%");
-            sentecia.setString(2, dni.trim() + "%");
+            PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+            sentencia.setString(1, nombre.trim() + "%");
+            sentencia.setString(2, dni.trim() + "%");
 
-            ResultSet rs = sentecia.executeQuery();
+            ResultSet rs = sentencia.executeQuery();
             if (campo.equals("mecanicos") || campo.equals("vendedores")) {
                 while (rs.next()) {
                     Object[] rowData = {rs.getString("dni"), rs.getString("nombre"), rs.getInt("sueldo"), rs.getInt("num"), rs.getString("email")};
@@ -49,7 +50,7 @@ public class Usuarios extends javax.swing.JFrame {
                 }
             }
             rs.close();
-            sentecia.close();
+            sentencia.close();
             Conex.CerrarConex();
         } catch (Exception e) {
             JOptionPane.showMessageDialog(Usuarios.this, e);
@@ -68,6 +69,8 @@ public class Usuarios extends javax.swing.JFrame {
         this.setTitle("Gestion de usuarios");
         this.setSize(960, 600);
         email = emailS;
+                this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
         if (!email.equals("admin@gmail.com")) {
             Usuarios.this.remove(btnEliminar);
             Usuarios.this.remove(btnModificar);
@@ -324,16 +327,16 @@ public class Usuarios extends javax.swing.JFrame {
 
                     String sql = "update " + rb + " set dni= ? ,nombre= ?, sueldo= ?  ,num= ? ,email = ? ,passwd = ?   where dni like ? ;";
 
-                    PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
-                    sentecia.setString(1, dni);
-                    sentecia.setString(2, nombre);
-                    sentecia.setInt(3, sueldo);
-                    sentecia.setInt(4, num);
-                    sentecia.setString(5, email);
-                    sentecia.setString(6, passwd);
-                    sentecia.setString(7, dni);
-                    sentecia.executeUpdate();
-                    sentecia.close();
+                    PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                    sentencia.setString(1, dni);
+                    sentencia.setString(2, nombre);
+                    sentencia.setInt(3, sueldo);
+                    sentencia.setInt(4, num);
+                    sentencia.setString(5, email);
+                    sentencia.setString(6, passwd);
+                    sentencia.setString(7, dni);
+                    sentencia.executeUpdate();
+                    sentencia.close();
                     Conex.CerrarConex();
 
                 } else {
@@ -373,15 +376,15 @@ public class Usuarios extends javax.swing.JFrame {
 
                     String sql = "update " + rb + " set dni= ? ,nombre= ?  ,num= ? ,email = ? ,passwd = ?   where dni like ? ;";
 
-                    PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
-                    sentecia.setString(1, dni);
-                    sentecia.setString(2, nombre);
-                    sentecia.setInt(3, num);
-                    sentecia.setString(4, email);
-                    sentecia.setString(5, passwd);
-                    sentecia.setString(6, dni);
-                    sentecia.executeUpdate();
-                    sentecia.close();
+                    PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                    sentencia.setString(1, dni);
+                    sentencia.setString(2, nombre);
+                    sentencia.setInt(3, num);
+                    sentencia.setString(4, email);
+                    sentencia.setString(5, passwd);
+                    sentencia.setString(6, dni);
+                    sentencia.executeUpdate();
+                    sentencia.close();
                     Conex.CerrarConex();
 
                 }
@@ -405,10 +408,10 @@ public class Usuarios extends javax.swing.JFrame {
             try {
                 Connection conexion = Conex.devolverConex();
                 String sql = "delete from " + rb + " where dni like ? ;";
-                PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
-                sentecia.setString(1, dni);
-                sentecia.executeUpdate();
-                sentecia.close();
+                PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                sentencia.setString(1, dni);
+                sentencia.executeUpdate();
+                sentencia.close();
                 Conex.CerrarConex();
                 JOptionPane.showMessageDialog(Usuarios.this, "Fila borrada correctamente");
 
