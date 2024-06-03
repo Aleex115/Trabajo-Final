@@ -6,12 +6,11 @@ package trabajojoseluis;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
-import java.sql.DriverManager;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import javax.swing.JPanel;
 import javax.swing.table.DefaultTableModel;
 import misclases.Conex;
 import static misclases.Encriptador.encryptPassword;
@@ -30,7 +29,7 @@ public class Usuarios extends javax.swing.JFrame {
 
     public void RellenarDatos(String campo, DefaultTableModel dtm, String nombre, String dni) {
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(Usuarios.this);
             String sql = "SELECT * FROM " + campo + " WHERE nombre LIKE ? AND dni LIKE ?";
 
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
@@ -69,7 +68,7 @@ public class Usuarios extends javax.swing.JFrame {
         this.setTitle("Gestion de usuarios");
         this.setSize(960, 600);
         email = emailS;
-                this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+        this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         if (!email.equals("admin@gmail.com")) {
             Usuarios.this.remove(btnEliminar);
@@ -278,150 +277,195 @@ public class Usuarios extends javax.swing.JFrame {
     }//GEN-LAST:event_btnConsultaActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        if (JOptionPane.showConfirmDialog(Usuarios.this, "Estas seguro de quieres modificar la tabla") == 0) {
 
-            try {
-                Connection conexion = Conex.devolverConex();
-                if (rb.equals("vendedores") || rb.equals("mecanicos")) {
-                    String dni = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo dni o dejalo en blanco si el mismo");
-                    if (dni.trim().isEmpty()) {
-                        dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
+        if (Tabla.getSelectedRow() != -1) {
+            if (JOptionPane.showConfirmDialog(Usuarios.this, "Estas seguro de quieres modificar la tabla") == 0) {
+
+                try {
+                    Connection conexion = (Connection) Conex.devolverConex(Usuarios.this);
+                    if (rb.equals("vendedores")) {
+                        String dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
+
+                        String nombre = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo nombre o dejalo en blanco si el mismo");
+                        if (nombre.trim().isEmpty()) {
+                            nombre = (String) dtm.getValueAt(Tabla.getSelectedRow(), 1);
+                        }
+                        dtm.setValueAt(nombre, Tabla.getSelectedRow(), 1);
+
+                        String sueldostr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo sueldo o dejalo en blanco si el mismo");
+                        int sueldo;
+                        if (sueldostr.trim().isEmpty()) {
+                            sueldo = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 2);
+                        } else {
+                            sueldo = Integer.parseInt(sueldostr.trim());
+                        }
+                        dtm.setValueAt(sueldo, Tabla.getSelectedRow(), 2);
+
+                        String numstr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo numero o dejalo en blanco si el mismo");
+                        int num;
+                        if (numstr.trim().isEmpty()) {
+                            num = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 3);
+                        } else {
+                            num = Integer.parseInt(numstr.trim());
+                        }
+                        dtm.setValueAt(num, Tabla.getSelectedRow(), 3);
+
+                        String email = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo email o dejalo en blanco si el mismo");
+                        if (email.trim().isEmpty()) {
+                            email = (String) dtm.getValueAt(Tabla.getSelectedRow(), 4);
+                        }
+                        dtm.setValueAt(email, Tabla.getSelectedRow(), 4);
+
+                        String passwd = JOptionPane.showInputDialog(Usuarios.this, "Introduce la nueva contraseña o dejalo en blanco si no quieres contraseña");
+                        if (passwd.trim().isEmpty()) {
+                            passwd = passwd.trim();
+                        }
+                        passwd = encryptPassword(passwd);
+
+                        String sql = "update " + rb + " set nombre= ?, sueldo= ?  ,num= ? ,email = ? ,passwd = ?   where dni like ? ;";
+
+                        PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+
+                        sentencia.setString(1, nombre);
+                        sentencia.setInt(2, sueldo);
+                        sentencia.setInt(3, num);
+                        sentencia.setString(4, email);
+                        sentencia.setString(5, passwd);
+                        sentencia.setString(6, dni);
+                        sentencia.executeUpdate();
+                        sentencia.close();
+                        Conex.CerrarConex();
+
                     }
-                    dtm.setValueAt(dni, Tabla.getSelectedRow(), 0);
+                    else if (rb.equals("mecanicos")) {
+                        String dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
 
-                    String nombre = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo nombre o dejalo en blanco si el mismo");
-                    if (nombre.trim().isEmpty()) {
-                        nombre = (String) dtm.getValueAt(Tabla.getSelectedRow(), 1);
+                        String nombre = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo nombre o dejalo en blanco si el mismo");
+                        if (nombre.trim().isEmpty()) {
+                            nombre = (String) dtm.getValueAt(Tabla.getSelectedRow(), 1);
+                        }
+                        dtm.setValueAt(nombre, Tabla.getSelectedRow(), 1);
+
+                        String sueldostr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo sueldo o dejalo en blanco si el mismo");
+                        int sueldo;
+                        if (sueldostr.trim().isEmpty()) {
+                            sueldo = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 2);
+                        } else {
+                            sueldo = Integer.parseInt(sueldostr.trim());
+                        }
+                        dtm.setValueAt(sueldo, Tabla.getSelectedRow(), 2);
+
+                        String numstr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo numero o dejalo en blanco si el mismo");
+                        int num;
+                        if (numstr.trim().isEmpty()) {
+                            num = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 3);
+                        } else {
+                            num = Integer.parseInt(numstr.trim());
+                        }
+                        dtm.setValueAt(num, Tabla.getSelectedRow(), 3);
+
+                        String email = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo email o dejalo en blanco si el mismo");
+                        if (email.trim().isEmpty()) {
+                            email = (String) dtm.getValueAt(Tabla.getSelectedRow(), 4);
+                        }
+                        dtm.setValueAt(email, Tabla.getSelectedRow(), 4);
+
+                        String sql = "update " + rb + " set nombre= ?, sueldo= ?  ,num= ? ,email = ?   where dni like ? ;";
+
+                        PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                       
+                        sentencia.setString(1, nombre);
+                        sentencia.setInt(2, sueldo);
+                        sentencia.setInt(3, num);
+                        sentencia.setString(4, email);
+                        sentencia.setString(5, dni);
+                        sentencia.executeUpdate();
+                        sentencia.close();
+                        Conex.CerrarConex();
+
+                    } 
+                    else {
+                        String dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
+
+                        String nombre = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo nombre o dejalo en blanco si el mismo");
+                        if (nombre.trim().isEmpty()) {
+                            nombre = (String) dtm.getValueAt(Tabla.getSelectedRow(), 1);
+                        }
+                        dtm.setValueAt(nombre, Tabla.getSelectedRow(), 1);
+
+                        String numstr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo numero o dejalo en blanco si el mismo");
+                        int num;
+                        if (numstr.trim().isEmpty()) {
+                            num = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 2);
+                        } else {
+                            num = Integer.parseInt(numstr.trim());
+                        }
+
+                        dtm.setValueAt(num, Tabla.getSelectedRow(), 2);
+
+                        String email = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo email o dejalo en blanco si el mismo");
+                        if (email.trim().isEmpty()) {
+                            email = (String) dtm.getValueAt(Tabla.getSelectedRow(), 3);
+                        }
+                        dtm.setValueAt(email, Tabla.getSelectedRow(), 3);
+
+                        String sql = "update " + rb + " set nombre= ?  ,num= ? ,email = ? where dni like ? ;";
+
+                        PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                        sentencia.setString(1, nombre);
+                        sentencia.setInt(2, num);
+                        sentencia.setString(3, email);
+                        sentencia.setString(4, dni);
+                        sentencia.executeUpdate();
+                        sentencia.close();
+                        Conex.CerrarConex();
+
                     }
-                    dtm.setValueAt(nombre, Tabla.getSelectedRow(), 1);
 
-                    String sueldostr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo sueldo o dejalo en blanco si el mismo");
-                    int sueldo;
-                    if (sueldostr.trim().isEmpty()) {
-                        sueldo = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 2);
-                    } else {
-                        sueldo = Integer.parseInt(sueldostr.trim());
-                    }
-                    dtm.setValueAt(sueldo, Tabla.getSelectedRow(), 2);
+                    JOptionPane.showMessageDialog(Usuarios.this, "Fila modificada correctamente");
 
-                    String numstr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo numero o dejalo en blanco si el mismo");
-                    int num;
-                    if (numstr.trim().isEmpty()) {
-                        num = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 3);
-                    } else {
-                        num = Integer.parseInt(numstr.trim());
-                    }
-                    dtm.setValueAt(num, Tabla.getSelectedRow(), 3);
-
-                    String email = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo email o dejalo en blanco si el mismo");
-                    if (email.trim().isEmpty()) {
-                        email = (String) dtm.getValueAt(Tabla.getSelectedRow(), 4);
-                    }
-                    dtm.setValueAt(email, Tabla.getSelectedRow(), 4);
-
-                    String passwd = JOptionPane.showInputDialog(Usuarios.this, "Introduce la nueva contraseña o dejalo en blanco si no quieres contraseña");
-                    if (passwd.trim().isEmpty()) {
-                        passwd = passwd.trim();
-                    }
-                    passwd = encryptPassword(passwd);
-
-                    String sql = "update " + rb + " set dni= ? ,nombre= ?, sueldo= ?  ,num= ? ,email = ? ,passwd = ?   where dni like ? ;";
-
-                    PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
-                    sentencia.setString(1, dni);
-                    sentencia.setString(2, nombre);
-                    sentencia.setInt(3, sueldo);
-                    sentencia.setInt(4, num);
-                    sentencia.setString(5, email);
-                    sentencia.setString(6, passwd);
-                    sentencia.setString(7, dni);
-                    sentencia.executeUpdate();
-                    sentencia.close();
-                    Conex.CerrarConex();
-
-                } else {
-                    String dni = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo dni o dejalo en blanco si el mismo");
-                    if (dni.trim().isEmpty()) {
-                        dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
-                    }
-                    dtm.setValueAt(dni, Tabla.getSelectedRow(), 0);
-
-                    String nombre = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo nombre o dejalo en blanco si el mismo");
-                    if (nombre.trim().isEmpty()) {
-                        nombre = (String) dtm.getValueAt(Tabla.getSelectedRow(), 1);
-                    }
-                    dtm.setValueAt(nombre, Tabla.getSelectedRow(), 1);
-
-                    String numstr = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo numero o dejalo en blanco si el mismo");
-                    int num;
-                    if (numstr.trim().isEmpty()) {
-                        num = (Integer) dtm.getValueAt(Tabla.getSelectedRow(), 2);
-                    } else {
-                        num = Integer.parseInt(numstr.trim());
-                    }
-
-                    dtm.setValueAt(num, Tabla.getSelectedRow(), 2);
-
-                    String email = JOptionPane.showInputDialog(Usuarios.this, "Introduce el nuevo email o dejalo en blanco si el mismo");
-                    if (email.trim().isEmpty()) {
-                        email = (String) dtm.getValueAt(Tabla.getSelectedRow(), 3);
-                    }
-                    dtm.setValueAt(email, Tabla.getSelectedRow(), 3);
-
-                    String passwd = JOptionPane.showInputDialog(Usuarios.this, "Introduce la nueva contraseña o dejalo en blanco si no quieres contraseña");
-                    if (passwd.trim().isEmpty()) {
-                        passwd = passwd.trim();
-                    }
-                    passwd = encryptPassword(passwd);
-
-                    String sql = "update " + rb + " set dni= ? ,nombre= ?  ,num= ? ,email = ? ,passwd = ?   where dni like ? ;";
-
-                    PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
-                    sentencia.setString(1, dni);
-                    sentencia.setString(2, nombre);
-                    sentencia.setInt(3, num);
-                    sentencia.setString(4, email);
-                    sentencia.setString(5, passwd);
-                    sentencia.setString(6, dni);
-                    sentencia.executeUpdate();
-                    sentencia.close();
-                    Conex.CerrarConex();
-
+                } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
+                    JOptionPane.showMessageDialog(Usuarios.this, "No se puede modificar esa fila");
+                }  catch (com.mysql.jdbc.exceptions.jdbc4.MySQLDataException e) {
+                    JOptionPane.showMessageDialog(Usuarios.this, "Error en los datos. Por favor, revisa las entradas.");
+                }  catch (Exception e) {
+                    e.printStackTrace();
                 }
-
-                JOptionPane.showMessageDialog(Usuarios.this, "Fila modificada correctamente");
-
-            } catch (com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException e) {
-                JOptionPane.showMessageDialog(Usuarios.this, "No se puede borrar esa fila");
-            } catch (SQLException e) {
-                System.out.println(e);
+            } else {
+                JOptionPane.showMessageDialog(Usuarios.this, "Fila no borrada");
             }
         } else {
-            JOptionPane.showMessageDialog(Usuarios.this, "Fila no borrada");
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una fila primero.");
         }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        if (JOptionPane.showConfirmDialog(Usuarios.this, "Estas seguro de quieres eliminarlo") == 0) {
-            String dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
-            dtm.removeRow(Tabla.getSelectedRow());
-            try {
-                Connection conexion = Conex.devolverConex();
-                String sql = "delete from " + rb + " where dni like ? ;";
-                PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
-                sentencia.setString(1, dni);
-                sentencia.executeUpdate();
-                sentencia.close();
-                Conex.CerrarConex();
-                JOptionPane.showMessageDialog(Usuarios.this, "Fila borrada correctamente");
 
-            } catch (com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException e) {
-                JOptionPane.showMessageDialog(Usuarios.this, "No se puede borrar esa fila");
-            } catch (SQLException e) {
-                System.out.println(e);
+        if (Tabla.getSelectedRow() != -1) {
+            if (JOptionPane.showConfirmDialog(Usuarios.this, "Estas seguro de quieres eliminarlo") == 0) {
+                String dni = (String) dtm.getValueAt(Tabla.getSelectedRow(), 0);
+                dtm.removeRow(Tabla.getSelectedRow());
+                try {
+                    Connection conexion = (Connection) Conex.devolverConex(Usuarios.this);
+                    String sql = "delete from " + rb + " where dni like ? ;";
+                    PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
+                    sentencia.setString(1, dni);
+                    sentencia.executeUpdate();
+                    sentencia.close();
+                    Conex.CerrarConex();
+                    JOptionPane.showMessageDialog(Usuarios.this, "Fila borrada correctamente");
+
+                } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLIntegrityConstraintViolationException e) {
+                    JOptionPane.showMessageDialog(Usuarios.this, "No se puede eliminar esa fila");
+                } catch (SQLException e) {
+                    System.out.println(e);
+                }
+            } else {
+                JOptionPane.showMessageDialog(Usuarios.this, "Fila no borrada");
             }
         } else {
-            JOptionPane.showMessageDialog(Usuarios.this, "Fila no borrada");
+            JOptionPane.showMessageDialog(this, "Por favor, seleccione una fila primero.");
+
         }
     }//GEN-LAST:event_btnEliminarActionPerformed
 
@@ -472,7 +516,7 @@ public class Usuarios extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Usuarios("").setVisible(true);
+                new Usuarios("admin@gmail.com").setVisible(true);
             }
         });
     }

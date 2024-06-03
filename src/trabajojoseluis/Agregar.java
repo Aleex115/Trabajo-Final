@@ -197,7 +197,7 @@ public class Agregar extends javax.swing.JFrame {
                     if (usuario.equals("clientes") || usuario.equals("proveedores")) {
 
                         try {
-                            Connection conexion = Conex.devolverConex();
+                            Connection conexion = (Connection) Conex.devolverConex(Agregar.this);
 
                             String sql = "insert into " + usuario + " values (?,?,?,?);";
 
@@ -223,9 +223,9 @@ public class Agregar extends javax.swing.JFrame {
                     } else if (usuario.equals("vendedores")) {
                         if (Validador.validarSueldo(Integer.parseInt(txtSueldo.getText()), this)) {
                             try {
-                                Connection conexion = Conex.devolverConex();
+                                Connection conexion = (Connection) Conex.devolverConex(Agregar.this);
 
-                                String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ? , ?,0 );";
+                                String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ? , ? );";
 
                                 PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
 
@@ -250,7 +250,7 @@ public class Agregar extends javax.swing.JFrame {
                         {
                             if (Validador.validarSueldo(Integer.parseInt(txtSueldo.getText()), this)) {
                                 try {
-                                    Connection conexion = Conex.devolverConex();
+                                    Connection conexion = (Connection) Conex.devolverConex(Agregar.this);
 
                                     String sql = "insert into " + usuario + " values ( ? , ? , ? , ? , ?  );";
 

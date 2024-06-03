@@ -15,6 +15,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import misclases.Conex;
+import misclases.EscribirPDF;
 
 /**
  *
@@ -25,7 +26,7 @@ public class ComprarCoche extends javax.swing.JFrame {
     /**
      * Creates new form ComprarCoche
      */
-    String email, modelo, nbastidor, dni;
+    String email, modelo, nbastidor, dni, cliente, vendedor;
     DefaultComboBoxModel<String> model1 = new DefaultComboBoxModel<>();
     ArrayList<String> dniC = new ArrayList<>();
     LocalDateTime fechaHoraActual = LocalDateTime.now();
@@ -64,7 +65,7 @@ public class ComprarCoche extends javax.swing.JFrame {
         preciotxt = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         clientes = new javax.swing.JComboBox<>();
-        jButton1 = new javax.swing.JButton();
+        btnComprar = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
 
@@ -97,16 +98,21 @@ public class ComprarCoche extends javax.swing.JFrame {
         clientes.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
         clientes.setForeground(new java.awt.Color(255, 255, 255));
         clientes.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        getContentPane().add(clientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 120, -1, -1));
-
-        jButton1.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
-        jButton1.setText("Comprar");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
+        clientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
+                clientesActionPerformed(evt);
             }
         });
-        getContentPane().add(jButton1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 150, 70));
+        getContentPane().add(clientes, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 120, -1, -1));
+
+        btnComprar.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
+        btnComprar.setText("Comprar");
+        btnComprar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnComprarActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnComprar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 250, 150, 70));
 
         jLabel6.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
@@ -119,10 +125,10 @@ public class ComprarCoche extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
         try {
             if (Long.parseLong(preciotxt.getText()) > 1000) {
-                Connection conexion = Conex.devolverConex();
+                Connection conexion = (Connection) Conex.devolverConex(ComprarCoche.this);
                 String sql = "insert into ventas values (? , ?, ?, ?, ?)";
                 PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
                 sentecia.setString(1, nbastidor);
@@ -134,6 +140,13 @@ public class ComprarCoche extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Se ha realizado la compra");
                 sentecia.close();
                 Conex.CerrarConex();
+                if (JOptionPane.showConfirmDialog(this, "¿Quieres factura?", "Confirmación", JOptionPane.YES_NO_OPTION) == JOptionPane.YES_OPTION) {
+                    EscribirPDF es = new EscribirPDF();
+                    es.Escribir(cliente, vendedor, nbastidor, Integer.parseInt(preciotxt.getText()), ComprarCoche.this);
+                } else {
+                    JOptionPane.showMessageDialog(this, "No se hará factura");
+                }
+                dispose();
             } else {
                 System.out.println("El precio esta mal");
             }
@@ -144,11 +157,16 @@ public class ComprarCoche extends javax.swing.JFrame {
 
         }
 
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnComprarActionPerformed
+
+    private void clientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_clientesActionPerformed
+        cliente = (String) clientes.getSelectedItem();
+    }//GEN-LAST:event_clientesActionPerformed
 
     public void AñadirClientes() {
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(ComprarCoche.this);
+
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement("select dni, nombre from clientes");
             ResultSet rs = sentecia.executeQuery();
             while (rs.next()) {
@@ -169,13 +187,14 @@ public class ComprarCoche extends javax.swing.JFrame {
 
     public void ObtenerDni() {
         try {
-            Connection conexion = Conex.devolverConex();
-            String sql = "Select dni from vendedores where email like ?;";
+            Connection conexion = (Connection) Conex.devolverConex(ComprarCoche.this);
+            String sql = "Select dni,nombre from vendedores where email like ?;";
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
             sentecia.setString(1, email);
             ResultSet rs = sentecia.executeQuery();
             rs.next();
             dni = rs.getString(1);
+            vendedor = rs.getString(2);
             rs.close();
             sentecia.close();
             Conex.CerrarConex();
@@ -185,9 +204,9 @@ public class ComprarCoche extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnComprar;
     private javax.swing.JComboBox<String> clientes;
     private javax.swing.JLabel coche;
-    private javax.swing.JButton jButton1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

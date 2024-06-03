@@ -68,8 +68,8 @@ public class Menu extends javax.swing.JFrame {
 
         jLabel6.setFont(new java.awt.Font("Gill Sans MT", 0, 48)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(200, 200, 200));
-        jLabel6.setText("Menú principal");
-        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(340, 30, -1, -1));
+        jLabel6.setText("Concesionario Power Tyres");
+        getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 30, -1, -1));
 
         ventas.setBackground(new java.awt.Color(0, 0, 0));
         ventas.setForeground(new java.awt.Color(0, 0, 0));
@@ -78,6 +78,11 @@ public class Menu extends javax.swing.JFrame {
         ventas.setBorderPainted(false);
         ventas.setContentAreaFilled(false);
         ventas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        ventas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                ventasActionPerformed(evt);
+            }
+        });
         getContentPane().add(ventas, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 300, -1, -1));
 
         coches.setBackground(new java.awt.Color(0, 0, 0));
@@ -142,6 +147,11 @@ public class Menu extends javax.swing.JFrame {
         Reparaciones r = new Reparaciones();
         r.setVisible(true);
     }//GEN-LAST:event_reparacionesActionPerformed
+
+    private void ventasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ventasActionPerformed
+        Ventas v = new Ventas();
+        v.setVisible(true);
+    }//GEN-LAST:event_ventasActionPerformed
 
     /**
      * @param args the command line arguments

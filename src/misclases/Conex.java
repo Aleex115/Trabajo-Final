@@ -5,7 +5,9 @@
 package misclases;
 
 import com.mysql.jdbc.Connection;
+import java.awt.Component;
 import java.sql.DriverManager;
+import javax.swing.JOptionPane;
 
 /**
  *
@@ -15,21 +17,30 @@ public class Conex {
 
     static Connection conexion;
 
-    public static Connection devolverConex() {
-        try {
+    public static Connection devolverConex(Component comp) {
+        try
+        {
             Class.forName("com.mysql.jdbc.Driver");
-             conexion= (Connection) DriverManager.getConnection("jdbc:mysql://localhost/trabajo?useSSL=false", "alex", "daw");
-        } catch (Exception e) {
-            System.out.println(e);
+            conexion = (Connection) DriverManager.getConnection("jdbc:mysql://localhost/trabajo?useSSL=false", "joseluis", "joseluis");
+
+        } catch (com.mysql.jdbc.CommunicationsException e)
+        {
+            JOptionPane.showMessageDialog(comp, "Base de datos no conectada");
+        } catch (Exception ex)
+        {
+            System.out.println(ex);
         }
         return conexion;
     }
-    public static void CerrarConex(){
-        try{
+
+    public static void CerrarConex() {
+        try
+        {
             conexion.close();
-        }catch(Exception e){
+        } catch (Exception e)
+        {
             System.out.println(e);
         }
     }
-    
+
 }

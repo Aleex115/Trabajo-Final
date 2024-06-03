@@ -28,7 +28,7 @@ public class AgregarReparacion extends javax.swing.JFrame {
 
     public void AgregarMec() {
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(AgregarReparacion.this);
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement("select dni, nombre from mecanicos");
             ResultSet rs = sentencia.executeQuery();
             while (rs.next()) {
@@ -49,7 +49,7 @@ public class AgregarReparacion extends javax.swing.JFrame {
 
     public void AgregarCoches() {
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(AgregarReparacion.this);
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement("select n_bastidor, marca,modelo from coches");
             ResultSet rs = sentencia.executeQuery();
             while (rs.next()) {
@@ -259,7 +259,7 @@ public class AgregarReparacion extends javax.swing.JFrame {
 
         if (Comprobaciones()) {
             try {
-                Connection conexion = Conex.devolverConex();
+                Connection conexion = (Connection) Conex.devolverConex(AgregarReparacion.this);
                 String sql = "insert into reparaciones values (?, ?, ?, ?, ?,? )";
                 PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement(sql);
                 sentencia.setString(1, dniMec.get(cmbMec.getSelectedIndex()));
@@ -319,7 +319,7 @@ public class AgregarReparacion extends javax.swing.JFrame {
             return false;
         }
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(AgregarReparacion.this);
             PreparedStatement sentencia = (PreparedStatement) conexion.prepareStatement("select n_reparacion from reparaciones");
             ResultSet rs = sentencia.executeQuery();
             while (rs.next()) {

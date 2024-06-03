@@ -1,18 +1,20 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package misclases;
 
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 
 /**
- *
- * @author code
+ * La clase Encriptador proporciona métodos para encriptar contraseñas
+ * y autenticar contraseñas encriptadas usando el algoritmo SHA-256.
  */
 public class Encriptador {
 
+    /**
+     * Autentica una contraseña comparándola con una contraseña encriptada.
+     *
+     * @param inputPassword la contraseña proporcionada por el usuario.
+     * @param hashedPassword la contraseña encriptada almacenada.
+     * @return true si la contraseña proporcionada coincide con la contraseña encriptada, de lo contrario false.
+     */
     public static boolean authenticatePassword(String inputPassword, String hashedPassword) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
@@ -34,7 +36,14 @@ public class Encriptador {
             return false;
         }
     }
-    
+
+    /**
+     * Encripta una contraseña usando el algoritmo SHA-256.
+     *
+     * @param password la contraseña que se desea encriptar.
+     * @return la representación en cadena hexadecimal de la contraseña encriptada,
+     *         o null si ocurre un error durante la encriptación.
+     */
     public static String encryptPassword(String password) {
         try {
             // Crear un objeto MessageDigest para SHA-256

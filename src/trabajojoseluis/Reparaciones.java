@@ -136,7 +136,7 @@ public class Reparaciones extends javax.swing.JFrame {
         dtm.setRowCount(0);
 
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(Reparaciones.this);
             String sql = "SELECT reparaciones.descp, mecanicos.nombre, CONCAT(coches.marca, ' ', coches.modelo), DATEDIFF(reparaciones.fecha_final, reparaciones.fecha_inicio) "
                     + "FROM reparaciones "
                     + "JOIN coches ON coches.n_bastidor = reparaciones.n_bastidor "

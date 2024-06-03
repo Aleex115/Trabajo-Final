@@ -18,6 +18,7 @@ import javax.swing.DefaultComboBoxModel;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import misclases.Conex;
 import misclases.Validador;
 
@@ -36,6 +37,9 @@ public class AgregarCoche extends javax.swing.JFrame {
     JFileChooser fc;
     String fecha;
     File origen;
+    ArrayList<String> extensiones = new ArrayList<>();      
+    
+    
 
     public AgregarCoche() {
         initComponents();
@@ -47,6 +51,9 @@ public class AgregarCoche extends javax.swing.JFrame {
         model1.removeAllElements();
         this.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         AgregarPro();
+        extensiones.add("jpg");
+        extensiones.add("jgeg");
+        extensiones.add("png");
     }
 
     /**
@@ -219,7 +226,8 @@ public class AgregarCoche extends javax.swing.JFrame {
 
     private void imagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_imagenActionPerformed
         fc = new JFileChooser();
-
+        FileNameExtensionFilter filter = new FileNameExtensionFilter("Imagenes", "jpg", "jpeg", "png");
+        fc.setFileFilter(filter);
         seleccion = fc.showOpenDialog(this);
 
 
@@ -228,7 +236,7 @@ public class AgregarCoche extends javax.swing.JFrame {
     private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         if (Comprobaciones()) {
             try {
-                Connection conexion = Conex.devolverConex();
+                Connection conexion = (Connection) Conex.devolverConex(AgregarCoche.this);
                 String sql = "insert into coches values (? , ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
                 PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
                 AgregarSentencia(sentecia);
@@ -236,16 +244,18 @@ public class AgregarCoche extends javax.swing.JFrame {
                 JOptionPane.showMessageDialog(this, "Se ha realizado la inserción");
                 sentecia.close();
                 Conex.CerrarConex();
+                dispose();
+
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(this, e);
             }
         }
     }//GEN-LAST:event_btnAgregarActionPerformed
 
-    public void AgregarPro(){
-        
+    public void AgregarPro() {
+
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(AgregarCoche.this);
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement("select dni, nombre from proveedores");
             ResultSet rs = sentecia.executeQuery();
             while (rs.next()) {
@@ -273,16 +283,15 @@ public class AgregarCoche extends javax.swing.JFrame {
             while ((longitud = fis.read(buffer)) > 0) {
                 fos.write(buffer, 0, longitud);
             }
-            System.out.println();
         } catch (IOException e) {
-            JOptionPane.showMessageDialog(AgregarCoche.this, "Archivo copiado exitosamente a: " + destino.getAbsolutePath());
+            JOptionPane.showMessageDialog(AgregarCoche.this, e);
         }
     }
 
     public boolean Comprobaciones() {
         try {
             if (Validador.validarN_bastidor(n_bastidor.getText(), this)) {
-                if (Integer.parseInt(km.getText()) > 0) {
+                if (Integer.parseInt(km.getText()) >= 0) {
                     if (Integer.parseInt(cv.getText()) > 0) {
                         if (!modelo.getText().isEmpty() || !marca.getText().isEmpty()) {
                             if (Integer.parseInt(precio.getText()) > 1000) {
@@ -291,12 +300,22 @@ public class AgregarCoche extends javax.swing.JFrame {
                                 if (seleccion == JFileChooser.APPROVE_OPTION) {
 
                                     origen = fc.getSelectedFile();
-                                    txtImagen.setText(origen.getName());
-                                    File destinoDir = new File("src/img/coches");
-                                    System.out.println(origen.getName());
+                                    String extension = getExtension(origen);
+                                    if (extensiones.contains(extension.toLowerCase())) {
+                                        txtImagen.setText(origen.getName());
+                                        txtImagen.setText(origen.getName());
+                                        String currentDirectory = System.getProperty("user.dir");
+                                    File destinoDir = new File(System.getProperty("user.dir")+"\\src\\img\\coches");
                                     File destino = new File(destinoDir, origen.getName());
+                                        System.out.println(origen);
+                                        System.out.println(destino);
                                     copiarArchivo(origen, destino);
                                     return true;
+                                    } else {
+                                        JOptionPane.showMessageDialog(this, "El archivo seleccionado no es una imagen válida.");
+                                        txtImagen.setText("");
+                                    }
+                                    
                                 } else {
                                     JOptionPane.showMessageDialog(this, "Foto no seleccionada");
 
@@ -321,6 +340,17 @@ public class AgregarCoche extends javax.swing.JFrame {
 
         }
         return false;
+
+    }
+
+    public String getExtension(File file) {
+        String name = file.getName();
+        int lastIndex = name.lastIndexOf('.');
+        if (lastIndex > 0 && lastIndex < name.length() - 1) {
+            return name.substring(lastIndex + 1);
+        } else {
+            return "";
+        }
     }
 
     public void AgregarSentencia(PreparedStatement sentecia) {
@@ -340,6 +370,47 @@ public class AgregarCoche extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, e.getMessage());
 
         }
+    }
+
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Ventas.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Ventas.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Ventas.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Ventas.class
+                    .getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new AgregarCoche().setVisible(true);
+            }
+        });
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregar;

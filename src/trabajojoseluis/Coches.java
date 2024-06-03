@@ -6,14 +6,16 @@ package trabajojoseluis;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
+
 import java.sql.ResultSet;
-import javax.swing.ComboBoxModel;
+import java.sql.SQLException;
+import java.util.ArrayList;
 import javax.swing.DefaultComboBoxModel;
-import javax.swing.DefaultListModel;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
-import javax.swing.table.DefaultTableModel;
+import javax.swing.JOptionPane;
+
 import misclases.Conex;
+import misclases.EscribirXML;
 
 /**
  *
@@ -39,7 +41,9 @@ public class Coches extends javax.swing.JFrame {
         categoria.setVisible(false);
         km.setVisible(false);
         cv.setVisible(false);
-        jLabel1.setVisible(false);
+        fotoCoche.setVisible(false);
+        btnxml.setVisible(false);
+
     }
 
     public Coches(String emailS) {
@@ -65,7 +69,7 @@ public class Coches extends javax.swing.JFrame {
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
-        jLabel1 = new javax.swing.JLabel();
+        fotoCoche = new javax.swing.JLabel();
         modelCoches = new javax.swing.JComboBox<>();
         jLabel2 = new javax.swing.JLabel();
         rbTodos = new javax.swing.JRadioButton();
@@ -88,14 +92,15 @@ public class Coches extends javax.swing.JFrame {
         preciotxt = new javax.swing.JLabel();
         btnComprar = new javax.swing.JButton();
         precio = new javax.swing.JLabel();
-        btnComprar1 = new javax.swing.JButton();
+        btnAgregar = new javax.swing.JButton();
+        btnxml = new javax.swing.JButton();
         jLabel7 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/coches/e55.jpg"))); // NOI18N
-        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 290, 590, 380));
+        fotoCoche.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/coches/ClaseS.jpg"))); // NOI18N
+        getContentPane().add(fotoCoche, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 290, 590, 380));
 
         modelCoches.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
         modelCoches.addActionListener(new java.awt.event.ActionListener() {
@@ -106,7 +111,6 @@ public class Coches extends javax.swing.JFrame {
         getContentPane().add(modelCoches, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 220, -1, -1));
 
         jLabel2.setFont(new java.awt.Font("Gill Sans MT", 1, 48)); // NOI18N
-        jLabel2.setForeground(new java.awt.Color(0, 0, 0));
         jLabel2.setText("Gestión de coches");
         getContentPane().add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, -1, -1));
 
@@ -150,7 +154,7 @@ public class Coches extends javax.swing.JFrame {
 
         jLabel4.setBackground(new java.awt.Color(255, 255, 255));
         jLabel4.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel4.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setText("Modelo:");
         getContentPane().add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 310, -1, -1));
 
@@ -160,7 +164,7 @@ public class Coches extends javax.swing.JFrame {
         getContentPane().add(modelo, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 310, -1, -1));
 
         jLabel6.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel6.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setText("Marca:");
         getContentPane().add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 370, -1, -1));
 
@@ -170,7 +174,7 @@ public class Coches extends javax.swing.JFrame {
         getContentPane().add(marca, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 370, -1, -1));
 
         jLabel8.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel8.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setText("Categoria:");
         getContentPane().add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 440, -1, -1));
 
@@ -180,7 +184,7 @@ public class Coches extends javax.swing.JFrame {
         getContentPane().add(categoria, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 440, -1, -1));
 
         jLabel10.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setText("KM:");
         getContentPane().add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 560, -1, -1));
 
@@ -195,12 +199,12 @@ public class Coches extends javax.swing.JFrame {
         getContentPane().add(cv, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 620, -1, -1));
 
         jLabel13.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setText("CV:");
         getContentPane().add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 620, -1, -1));
 
         jLabel14.setFont(new java.awt.Font("Gill Sans MT", 3, 22)); // NOI18N
-        jLabel14.setForeground(new java.awt.Color(179, 147, 96));
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
         jLabel14.setText("Estado:");
         getContentPane().add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 500, -1, -1));
 
@@ -233,16 +237,27 @@ public class Coches extends javax.swing.JFrame {
         precio.setText("999");
         getContentPane().add(precio, new org.netbeans.lib.awtextra.AbsoluteConstraints(710, 220, -1, -1));
 
-        btnComprar1.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
-        btnComprar1.setForeground(new java.awt.Color(200, 173, 127));
-        btnComprar1.setText("Agregar");
-        btnComprar1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnComprar1.addActionListener(new java.awt.event.ActionListener() {
+        btnAgregar.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
+        btnAgregar.setForeground(new java.awt.Color(200, 173, 127));
+        btnAgregar.setText("Agregar");
+        btnAgregar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAgregar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnComprar1ActionPerformed(evt);
+                btnAgregarActionPerformed(evt);
             }
         });
-        getContentPane().add(btnComprar1, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 210, 110, 40));
+        getContentPane().add(btnAgregar, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 200, 110, 40));
+
+        btnxml.setFont(new java.awt.Font("Gill Sans MT", 0, 18)); // NOI18N
+        btnxml.setForeground(new java.awt.Color(200, 173, 127));
+        btnxml.setText("Catalogo en xml");
+        btnxml.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnxml.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnxmlActionPerformed(evt);
+            }
+        });
+        getContentPane().add(btnxml, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 260, 190, 40));
 
         jLabel7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/UIX/grisoscuro.png"))); // NOI18N
         getContentPane().add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 110, 1000, 600));
@@ -254,9 +269,12 @@ public class Coches extends javax.swing.JFrame {
         precio.setVisible(false);
         preciotxt.setVisible(false);
         btnComprar.setVisible(false);
+        btnxml.setVisible(false);
+
         String sql = "SELECT modelo FROM coches ;";
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(Coches.this);
+
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
             ResultSet rs = sentecia.executeQuery();
             model1.removeAllElements();
@@ -277,20 +295,24 @@ public class Coches extends javax.swing.JFrame {
         precio.setVisible(true);
         preciotxt.setVisible(true);
         btnComprar.setVisible(true);
+        btnxml.setVisible(true);
 
         String sql = "SELECT modelo FROM coches  WHERE NOT EXISTS (SELECT n_bastidor FROM ventas WHERE n_bastidor = coches.n_bastidor );";
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(Coches.this);
+
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
             ResultSet rs = sentecia.executeQuery();
             model1.removeAllElements();
             while (rs.next()) {
                 model1.addElement(rs.getString("modelo"));
             }
+            rs.close();
+            sentecia.close();
             Conex.CerrarConex();
 
         } catch (Exception e) {
-            System.out.println(e);
+            JOptionPane.showMessageDialog(this, e);
 
         }
     }//GEN-LAST:event_rbDispActionPerformed
@@ -299,16 +321,20 @@ public class Coches extends javax.swing.JFrame {
         precio.setVisible(false);
         preciotxt.setVisible(false);
         btnComprar.setVisible(false);
+        btnxml.setVisible(false);
 
         String sql = "SELECT modelo FROM coches  WHERE  EXISTS (SELECT n_bastidor FROM ventas WHERE n_bastidor = coches.n_bastidor );";
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion = (Connection) Conex.devolverConex(Coches.this);
+
             PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
             ResultSet rs = sentecia.executeQuery();
             model1.removeAllElements();
             for (; rs.next();) {
                 model1.addElement(rs.getString("modelo"));
             }
+            rs.close();
+            sentecia.close();
             Conex.CerrarConex();
 
         } catch (Exception e) {
@@ -325,10 +351,10 @@ public class Coches extends javax.swing.JFrame {
             categoria.setVisible(true);
             km.setVisible(true);
             cv.setVisible(true);
-            jLabel1.setVisible(true);
+            fotoCoche.setVisible(true);
             String sql = "SELECT n_bastidor,modelo,marca,categoria,estado,km,cv,precio,ref FROM coches  WHERE modelo like ?;";
             try {
-                Connection conexion = Conex.devolverConex();
+                Connection conexion = (Connection) Conex.devolverConex(Coches.this);
                 PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
                 sentecia.setString(1, (String) model1.getSelectedItem());
                 ResultSet rs = sentecia.executeQuery();
@@ -343,27 +369,63 @@ public class Coches extends javax.swing.JFrame {
                     km.setText(String.valueOf(rs.getInt("km")));
                     cv.setText(String.valueOf(rs.getInt("cv")));
                     precio.setText(String.valueOf(precioC) + "€");
-                    jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/coches/" + rs.getString("ref"))));
+                    
+                    fotoCoche.setIcon(new javax.swing.ImageIcon(getClass().getResource("/img/coches/" + rs.getString("ref"))));
                 }
-
+                rs.close();
+                sentecia.close();
                 Conex.CerrarConex();
-
-            } catch (Exception e) {
-                System.out.println(e);
-
+            } catch (SQLException e) {
+                e.printStackTrace();
             }
+
         }
     }//GEN-LAST:event_modelCochesActionPerformed
 
-    private void btnComprar1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprar1ActionPerformed
+    private void btnAgregarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarActionPerformed
         AgregarCoche ag = new AgregarCoche();
         ag.setVisible(true);
-    }//GEN-LAST:event_btnComprar1ActionPerformed
+    }//GEN-LAST:event_btnAgregarActionPerformed
 
     private void btnComprarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnComprarActionPerformed
         ComprarCoche cc = new ComprarCoche(email, modeloC, n_bastidorC, precioC);
         cc.setVisible(true);
     }//GEN-LAST:event_btnComprarActionPerformed
+
+    private void btnxmlActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnxmlActionPerformed
+        String sql = "SELECT modelo,marca,categoria,estado,km,cv,precio FROM coches  WHERE NOT EXISTS (SELECT n_bastidor FROM ventas WHERE n_bastidor = coches.n_bastidor );";
+        ArrayList<String> modelos = new ArrayList<>();
+        ArrayList<String> marcas = new ArrayList<>();
+        ArrayList<String> categorias = new ArrayList<>();
+        ArrayList<String> estado = new ArrayList<>();
+        ArrayList<Integer> km = new ArrayList<>();
+        ArrayList<Integer> cv = new ArrayList<>();
+        ArrayList<Integer> precio = new ArrayList<>();
+
+        try {
+            Connection conexion = (Connection) Conex.devolverConex(Coches.this);
+
+            PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
+            ResultSet rs = sentecia.executeQuery();
+            while (rs.next()) {
+                modelos.add(rs.getString(1));
+                marcas.add(rs.getString(2));
+                categorias.add(rs.getString(3));
+                estado.add(rs.getString(4));
+                km.add(rs.getInt(5));
+                cv.add(rs.getInt(6));
+                precio.add(rs.getInt(7));
+            }
+            rs.close();
+            sentecia.close();
+            Conex.CerrarConex();
+
+        } catch (Exception e) {
+            System.out.println(e);
+
+        }
+        EscribirXML.EscribirXMLCoche(modelos, marcas, categorias, estado, km, cv, precio, Coches.this);
+    }//GEN-LAST:event_btnxmlActionPerformed
 
     /**
      * @param args the command line arguments
@@ -401,13 +463,14 @@ public class Coches extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAgregar;
     private javax.swing.JButton btnComprar;
-    private javax.swing.JButton btnComprar1;
+    private javax.swing.JButton btnxml;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel categoria;
     private javax.swing.JLabel cv;
     private javax.swing.JLabel estado;
-    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel fotoCoche;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;

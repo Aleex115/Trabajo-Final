@@ -6,7 +6,6 @@ package trabajojoseluis;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
-import java.sql.DriverManager;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import misclases.Conex;
@@ -22,18 +21,17 @@ public class Login extends javax.swing.JFrame {
 
     public void comprobarContraseña(String email, String passwd) {
         try {
-            Connection conexion = Conex.devolverConex();
+            Connection conexion =  Conex.devolverConex(Login.this);
 
             String sql = "Select passwd from vendedores where email like ?;";
-            PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
+            PreparedStatement sentecia =  (PreparedStatement) conexion.prepareStatement(sql);
             sentecia.setString(1, email);
 
             ResultSet rs = sentecia.executeQuery();
             if (Validador.validarEmail(email, Login.this)) {
                 if (rs.next()) {
                     String contraseña = rs.getString(1);
-                    System.out.println(encryptPassword(passwd));
-                    System.out.println(contraseña);
+                    
                     if (authenticatePassword(passwd, contraseña)) {
                         JOptionPane.showMessageDialog(Login.this, "Login correcto");
                         dispose();
@@ -149,7 +147,6 @@ public class Login extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void BtnloginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnloginActionPerformed
-        System.out.println("prueba");
         comprobarContraseña(email.getText(), passwd.getText());
         email.setText("");
         passwd.setText("");
