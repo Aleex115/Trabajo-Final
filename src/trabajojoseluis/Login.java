@@ -19,38 +19,53 @@ import misclases.Validador;
  */
 public class Login extends javax.swing.JFrame {
 
-    public void comprobarContraseña(String email, String passwd) {
-        try {
-            Connection conexion =  Conex.devolverConex(Login.this);
-
+    public boolean comprobarContraseña(String email, String passwd) {
+        try
+        {
+            Connection conexion = Conex.devolverConex(Login.this);
+            String contraseña = "";
             String sql = "Select passwd from vendedores where email like ?;";
-            PreparedStatement sentecia =  (PreparedStatement) conexion.prepareStatement(sql);
+            PreparedStatement sentecia = (PreparedStatement) conexion.prepareStatement(sql);
             sentecia.setString(1, email);
 
             ResultSet rs = sentecia.executeQuery();
-            if (Validador.validarEmail(email, Login.this)) {
-                if (rs.next()) {
-                    String contraseña = rs.getString(1);
-                    
-                    if (authenticatePassword(passwd, contraseña)) {
+            if (Validador.validarEmail(email, Login.this))
+            {
+                if (rs.next())
+                {
+                     contraseña = rs.getString(1);
+
+                    if (authenticatePassword(passwd, contraseña))
+                    {
                         JOptionPane.showMessageDialog(Login.this, "Login correcto");
                         dispose();
                         Menu menu = new Menu(email);
                         menu.setVisible(true);
-                    } else {
+                        return true;
+                    } else
+                    {
                         JOptionPane.showMessageDialog(Login.this, "Contraseña incorrecta");
                     }
-                } else {
+                } else
+                {
                     JOptionPane.showMessageDialog(Login.this, "Ese email no existe");
                 }
+            }
+            if(authenticatePassword(passwd, contraseña)){
+                return true;
             }
             rs.close();
             sentecia.close();
             Conex.CerrarConex();
-
-        } catch (Exception e) {
+            if(authenticatePassword(passwd, contraseña)){
+                return true;
+            }
+        } catch (Exception e)
+        {
             JOptionPane.showMessageDialog(Login.this, e);
         }
+        return false;
+
     }
 
     /**
@@ -161,20 +176,27 @@ public class Login extends javax.swing.JFrame {
         /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
          * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
          */
-        try {
-            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
-                if ("Nimbus".equals(info.getName())) {
+        try
+        {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels())
+            {
+                if ("Nimbus".equals(info.getName()))
+                {
                     javax.swing.UIManager.setLookAndFeel(info.getClassName());
                     break;
                 }
             }
-        } catch (ClassNotFoundException ex) {
+        } catch (ClassNotFoundException ex)
+        {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (InstantiationException ex) {
+        } catch (InstantiationException ex)
+        {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
+        } catch (IllegalAccessException ex)
+        {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
-        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+        } catch (javax.swing.UnsupportedLookAndFeelException ex)
+        {
             java.util.logging.Logger.getLogger(Login.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
         }
         //</editor-fold>
